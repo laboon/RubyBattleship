@@ -16,8 +16,6 @@ class Board
   def initialize
     # note that matrix size 9 = 10 element
     @matrixSize = 9
-    #@matrix = []
-    #matrixSize.times { @matrix << Array.new(matrixSize)}
     @matrix = Hash.new{|j, k| j[k] = []}
 
 
@@ -134,8 +132,8 @@ class Board
   
   def placeShip(ship)
     orientation, x, y = ship.orientation, ship.x, ship.y
-    puts "Putting ship of size " + String(ship.size) + " at " + String(x) + "," \
-      + String(y) + ", " + orientation
+    #puts "Putting ship of size " + String(ship.size) + " at " + String(x) + "," \
+    #  + String(y) + ", " + orientation
     
     # todo - validate input better
     
@@ -263,8 +261,8 @@ end
 
 def printBoards
   2.times { puts }
-  # @enemyBoard.printEnemyBoard
-  @enemyBoard.printBoard
+  @enemyBoard.printEnemyBoard
+  # @enemyBoard.printBoard
   puts
   7.times { print "= " }
   2.times { puts }

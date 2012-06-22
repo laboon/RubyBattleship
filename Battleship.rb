@@ -18,7 +18,6 @@ class Board
     @matrixSize = 9
     @matrix = Hash.new{|j, k| j[k] = []}
 
-
     # loop through and set everything to . (empty space)
     for j in 0..@matrixSize
       for k in 0..@matrixSize
@@ -27,6 +26,8 @@ class Board
     end
   
   end
+   
+  attr_reader :matrixSize
     
   def printBoard
     3.times { print " " }
@@ -74,7 +75,7 @@ class Board
   end
   
   def checkSunk(shipType)
-    puts "Checking if " + shipType + " is sunk.."
+    # puts "Checking if " + shipType + " is sunk.."
     for j in 0..@matrixSize
       for k in 0..@matrixSize
         # found a remaining part of the ship
@@ -130,24 +131,44 @@ class Board
     
   end
   
+  def checkValidEmpty(x, y)
+    if x < 0 or x > @matrixSize
+      return false
+    end
+    if y < 0 or y > @matrixSize
+      return false
+    end
+    if @matrix[x][y] != EmptySquare
+      return false
+    end
+    return true
+  end
+  
   def placeShip(ship)
     orientation, x, y = ship.orientation, ship.x, ship.y
     #puts "Putting ship of size " + String(ship.size) + " at " + String(x) + "," \
     #  + String(y) + ", " + orientation
     
-    # todo - validate input better
-    
     if orientation == "r" 
-      for j in y..(y + ship.size - 1) 
-        @matrix[x][j] = ship.rep
+      for j in y..(y + ship.size - 1)
+        if checkValidEmpty(x, j)
+          @matrix[x][j] = ship.rep
+        else
+          return false
+        end
       end
     elsif orientation == "d"
       for j in x..(x + ship.size - 1)
-        @matrix[j][y] = ship.rep
+        if checkValidEmpty(j, y)
+          @matrix[j][y] = ship.rep
+        else
+          return false
+        end
       end
     else
       puts "error orienting."
     end
+    return true
   end
   
   def defeated?
@@ -269,6 +290,16 @@ def printBoards
   @playerBoard.printBoard  
 end
 
+def validMove?(x,y)
+  if x >= 0 and x <= @enemyBoard.matrixSize \
+    and y >= 0 and x <= @enemyBoard.matrixSize
+    
+    return true
+  else
+    return false
+  end
+end
+
 def getMove
   validMove = false
   while (!validMove)
@@ -276,8 +307,12 @@ def getMove
     coords = gets.chomp
     x, y = coords.split(/ /)
     x, y = Integer(x), Integer(y)
-    #TODO: error checking
-    validMove = true
+    
+    if validMove?(x, y)
+      validMove = true
+    else
+      puts "Invalid move."
+    end
   end
   @enemyBoard.fire(x, y)
   x, y = @enemy.getMove
@@ -306,40 +341,71 @@ def placeShips
   puts "Place your ships"
   
   # Aircraft carrier
-  print "Aircraft Carrier > "
-  line = gets.chomp
-  orientation, x, y = line.split(/ /)
-  x, y = Integer(x), Integer(y)
-  a = AircraftCarrier.new(orientation, x, y)
-  @playerBoard.placeShip(a)
   
-  print "Battleship > "
-  line = gets.chomp
-  orientation, x, y = line.split(/ /)
-  x, y = Integer(x), Integer(y)
-  b = Battleship.new(orientation, x, y)
-  @playerBoard.placeShip(b)
+  validSpot = false
+  while validSpot == false
+    print "Aircraft Carrier > "
+    line = gets.chomp
+    orientation, x, y = line.split(/ /)
+    x, y = Integer(x), Integer(y)
+    a = AircraftCarrier.new(orientation, x, y)
+    validSpot = @playerBoard.placeShip(a)
+    if not validSpot
+      puts "Invalid location."  
+    end
+  end
   
-  print "Submarine > "
-  line = gets.chomp
-  orientation, x, y = line.split(/ /)
-  x, y = Integer(x), Integer(y)
-  s = Submarine.new(orientation, x, y)
-  @playerBoard.placeShip(s)
+  validSpot = false
+  while validSpot == false
+    print "Battleship > "
+    line = gets.chomp
+    orientation, x, y = line.split(/ /)
+    x, y = Integer(x), Integer(y)
+    b = Battleship.new(orientation, x, y)
+    validSpot = @playerBoard.placeShip(b)
+    if not validSpot
+      puts "Invalid location."  
+    end
+  end
   
-  print "Cruiser > "
-  line = gets.chomp
-  orientation, x, y = line.split(/ /)
-  x, y = Integer(x), Integer(y)
-  c = Cruiser.new(orientation, x, y)
-  @playerBoard.placeShip(c)
+  validSpot = false
+  while validSpot == false
+    print "Submarine > "
+    line = gets.chomp
+    orientation, x, y = line.split(/ /)
+    x, y = Integer(x), Integer(y)
+    s = Submarine.new(orientation, x, y)
+    validSpot = @playerBoard.placeShip(s)
+    if not validSpot
+      puts "Invalid location."  
+    end
+  end
   
-  print "Destroyer > "
-  line = gets.chomp
-  orientation, x, y = line.split(/ /)
-  x, y = Integer(x), Integer(y)
-  d = Destroyer.new(orientation, x, y)
-  @playerBoard.placeShip(d)
+  validSpot = false
+  while validSpot == false
+    print "Cruiser > "
+    line = gets.chomp
+    orientation, x, y = line.split(/ /)
+    x, y = Integer(x), Integer(y)
+    c = Cruiser.new(orientation, x, y)
+    validSpot = @playerBoard.placeShip(c)
+    if not validSpot
+      puts "Invalid location."  
+    end
+  end
+  
+  validSpot = false
+  while validSpot == false
+    print "Destroyer > "
+    line = gets.chomp
+    orientation, x, y = line.split(/ /)
+    x, y = Integer(x), Integer(y)
+    d = Destroyer.new(orientation, x, y)
+    validSpot = @playerBoard.placeShip(d)
+    if not validSpot
+      puts "Invalid location."  
+    end
+  end
   
 end
 

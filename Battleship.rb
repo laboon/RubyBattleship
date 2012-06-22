@@ -144,6 +144,22 @@ class Board
     return true
   end
   
+  def clearRow(letter, row)
+    for j in 0..@matrixSize
+      if @matrix[row][j] == letter
+        @matrix[row][j] = EmptySquare
+      end
+    end
+  end
+  
+  def clearColumn(letter, col)
+    for j in 0..@matrixSize
+      if @matrix[j][col] == letter
+        @matrix[j][col] = EmptySquare
+      end
+    end
+  end
+  
   def placeShip(ship)
     orientation, x, y = ship.orientation, ship.x, ship.y
     #puts "Putting ship of size " + String(ship.size) + " at " + String(x) + "," \
@@ -154,6 +170,7 @@ class Board
         if checkValidEmpty(x, j)
           @matrix[x][j] = ship.rep
         else
+          clearRow(ship.rep, x)
           return false
         end
       end
@@ -162,6 +179,7 @@ class Board
         if checkValidEmpty(j, y)
           @matrix[j][y] = ship.rep
         else
+          clearColumn(ship.rep, y)
           return false
         end
       end

@@ -1,5 +1,6 @@
 
 class Ship
+  
   def initialize(size, orientation, x, y)
     @size = size
     @orientation = orientation
@@ -10,8 +11,11 @@ class Ship
     @name = "Undefined"
   end
   
-  attr_reader :size, :orientation, :x, :y, :rep, :name
+  # Orientation, x, and y can be modified after creation
+  # Size, rep, and name cannot
   
+  attr_reader :size, :orientation, :x, :y, :rep, :name
+  attr_writer :orientation, :x, :y
 end
 
 #
@@ -62,5 +66,7 @@ class Destroyer < Ship
     @rep = DestroyerSquare
     @name = "Destroyer"
   end
+  
+  
   
 end

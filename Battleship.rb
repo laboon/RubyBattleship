@@ -36,16 +36,6 @@ def checkForWin
   
 end
 
-def printBoards
-  2.times { puts }
-  @enemyBoard.printEnemyBoard
-  # @enemyBoard.printBoard
-  puts
-  7.times { print "= " }
-  2.times { puts }
-  @playerBoard.printBoard  
-end
-
 def validMove?(x,y)
   if x >= 0 and x <= @enemyBoard.matrixSize \
     and y >= 0 and x <= @enemyBoard.matrixSize
@@ -76,17 +66,45 @@ def getMove
   
 end
 
+def getRandDir
+  randVal = rand(2)
+  case randVal
+  when 0
+    return 'r'
+  when 1
+    return 'd'
+  else
+    puts "ERROR"
+    Process.exit
+  end
+end
+
 def placeEnemyShips
-  a = AircraftCarrier.new("r", 0, 0)
-  b = Battleship.new("r", 1, 0)
-  s = Submarine.new("r", 2, 0)
-  c = Cruiser.new("r", 3, 0)
-  d = Destroyer.new("r", 4, 0)
-  @enemyBoard.placeShip(a)
-  @enemyBoard.placeShip(b)
-  @enemyBoard.placeShip(s)
-  @enemyBoard.placeShip(c)
-  @enemyBoard.placeShip(d)
+  
+  shipArr = []
+  shipArr << AircraftCarrier.new("r", 1, 0)
+  shipArr << Battleship.new("r", 1, 0)
+  shipArr << Submarine.new("r", 2, 0)
+  shipArr << Cruiser.new("r", 3, 0)
+  shipArr << Destroyer.new("r", 4, 0)
+  
+  shipArr.each do |ship|
+    
+    works = false
+    while (works != true)
+      randDir = getRandDir
+      if (randDir = 'r')
+        xLoc = rand(@enemyBoard.matrixSize)
+        yLoc = rand(@enemyBoard.matrixSize - ship.size)
+      else
+        xLoc = rand(@enemyBoard.matrixSize - ship.size)
+        yLoc = rand(@enemyBoard.matrixSize)
+      end
+      
+      works = @enemyBoard.placeShip(ship)  
+    end
+  end
+    
 end
 
 def placeShips
@@ -164,6 +182,17 @@ def placeShips
   end
   
 end
+
+def printBoards
+  2.times { puts }
+  # @enemyBoard.printEnemyBoard
+  @enemyBoard.printBoard
+  puts
+  7.times { print "= " }
+  2.times { puts }
+  @playerBoard.printBoard  
+end
+
 
 def runRound
   printBoards

@@ -73,9 +73,6 @@ def getRandDir
     return 'r'
   when 1
     return 'd'
-  else
-    puts "ERROR"
-    Process.exit
   end
 end
 
@@ -93,14 +90,16 @@ def placeEnemyShips
     works = false
     while (works != true)
       randDir = getRandDir
-      if (randDir = 'r')
+      if (randDir == 'r')
         xLoc = rand(@enemyBoard.matrixSize)
         yLoc = rand(@enemyBoard.matrixSize - ship.size)
       else
         xLoc = rand(@enemyBoard.matrixSize - ship.size)
         yLoc = rand(@enemyBoard.matrixSize)
       end
-      
+      ship.orientation = randDir
+      ship.x = xLoc
+      ship.y = yLoc
       works = @enemyBoard.placeShip(ship)  
     end
   end
@@ -116,77 +115,35 @@ def placeShips
   
   # Aircraft carrier
   
-  validSpot = false
-  while validSpot == false
-    print "Aircraft Carrier > "
-    line = gets.chomp
-    orientation, x, y = line.split(/ /)
-    x, y = Integer(x), Integer(y)
-    a = AircraftCarrier.new(orientation, x, y)
-    validSpot = @playerBoard.placeShip(a)
-    if not validSpot
-      puts "Invalid location."  
+  shipArr = []
+  shipArr << AircraftCarrier.new("r", 1, 0)
+  shipArr << Battleship.new("r", 1, 0)
+  shipArr << Submarine.new("r", 2, 0)
+  shipArr << Cruiser.new("r", 3, 0)
+  shipArr << Destroyer.new("r", 4, 0)
+  
+  shipArr.each do |ship|
+    
+    works = false
+    while (works != true)
+      print ship.name + " > "
+      line = gets.chomp
+      orientation, x, y = line.split(/ /)
+      ship.orientation = orientation
+      ship.x, ship.y = Integer(x), Integer(y)
+      works = @playerBoard.placeShip(ship)
+      if (not works)
+        puts "Invalid location."  
+      end
     end
   end
-  
-  validSpot = false
-  while validSpot == false
-    print "Battleship > "
-    line = gets.chomp
-    orientation, x, y = line.split(/ /)
-    x, y = Integer(x), Integer(y)
-    b = Battleship.new(orientation, x, y)
-    validSpot = @playerBoard.placeShip(b)
-    if not validSpot
-      puts "Invalid location."  
-    end
-  end
-  
-  validSpot = false
-  while validSpot == false
-    print "Submarine > "
-    line = gets.chomp
-    orientation, x, y = line.split(/ /)
-    x, y = Integer(x), Integer(y)
-    s = Submarine.new(orientation, x, y)
-    validSpot = @playerBoard.placeShip(s)
-    if not validSpot
-      puts "Invalid location."  
-    end
-  end
-  
-  validSpot = false
-  while validSpot == false
-    print "Cruiser > "
-    line = gets.chomp
-    orientation, x, y = line.split(/ /)
-    x, y = Integer(x), Integer(y)
-    c = Cruiser.new(orientation, x, y)
-    validSpot = @playerBoard.placeShip(c)
-    if not validSpot
-      puts "Invalid location."  
-    end
-  end
-  
-  validSpot = false
-  while validSpot == false
-    print "Destroyer > "
-    line = gets.chomp
-    orientation, x, y = line.split(/ /)
-    x, y = Integer(x), Integer(y)
-    d = Destroyer.new(orientation, x, y)
-    validSpot = @playerBoard.placeShip(d)
-    if not validSpot
-      puts "Invalid location."  
-    end
-  end
-  
+    
 end
 
 def printBoards
   2.times { puts }
-  # @enemyBoard.printEnemyBoard
-  @enemyBoard.printBoard
+  @enemyBoard.printEnemyBoard
+  # @enemyBoard.printBoard
   puts
   7.times { print "= " }
   2.times { puts }

@@ -16,6 +16,10 @@ class Ship
   
   attr_reader :size, :orientation, :x, :y, :rep, :name
   attr_writer :orientation, :x, :y
+  
+  def toString
+    return @name + " (" + String(@size) + ") @ " + @orientation + " " + String(@x) + " " + String(@y)
+  end
 end
 
 #

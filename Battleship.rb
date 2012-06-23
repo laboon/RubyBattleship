@@ -17,7 +17,7 @@ MissSquare = "O"
 HitSquare = "X"
 
 
-def checkForWin
+def check_for_win
   
   playerDefeated = @playerBoard.defeated?
   enemyDefeated = @enemyBoard.defeated?
@@ -36,7 +36,7 @@ def checkForWin
   
 end
 
-def validMove?(x,y)
+def valid_move?(x,y)
   if x >= 0 and x <= @enemyBoard.matrixSize \
     and y >= 0 and x <= @enemyBoard.matrixSize
     
@@ -46,7 +46,7 @@ def validMove?(x,y)
   end
 end
 
-def getMove
+def get_move
   validMove = false
   while (!validMove)
     print "Enter coords (x y)> "
@@ -54,19 +54,19 @@ def getMove
     x, y = coords.split(/ /)
     x, y = Integer(x), Integer(y)
     
-    if validMove?(x, y)
+    if valid_move?(x, y)
       validMove = true
     else
       puts "Invalid move."
     end
   end
   @enemyBoard.fire(x, y)
-  x, y = @enemy.getMove
+  x, y = @enemy.get_move
   @playerBoard.fire(x, y)
   
 end
 
-def getRandDir
+def get_rand_dir
   randVal = rand(2)
   case randVal
   when 0
@@ -76,7 +76,7 @@ def getRandDir
   end
 end
 
-def placeEnemyShips
+def place_enemy_ships
   
   shipArr = []
   shipArr << AircraftCarrier.new("r", 1, 0)
@@ -89,7 +89,7 @@ def placeEnemyShips
     
     works = false
     while (works != true)
-      randDir = getRandDir
+      randDir = get_rand_dir
       if (randDir == 'r')
         xLoc = rand(@enemyBoard.matrixSize)
         yLoc = rand(@enemyBoard.matrixSize - ship.size)
@@ -100,15 +100,15 @@ def placeEnemyShips
       ship.orientation = randDir
       ship.x = xLoc
       ship.y = yLoc
-      works = @enemyBoard.placeShip(ship)  
+      works = @enemyBoard.place_ship(ship)  
     end
   end
     
 end
 
-def placeShips
+def place_ships
   puts "Enemy placing ships..."
-  placeEnemyShips
+  place_enemy_ships
   puts "done"
   
   puts "Place your ships"
@@ -131,7 +131,7 @@ def placeShips
       orientation, x, y = line.split(/ /)
       ship.orientation = orientation
       ship.x, ship.y = Integer(x), Integer(y)
-      works = @playerBoard.placeShip(ship)
+      works = @playerBoard.place_ship(ship)
       if (not works)
         puts "Invalid location."  
       end
@@ -140,20 +140,20 @@ def placeShips
     
 end
 
-def printBoards
+def print_boards
   2.times { puts }
-  @enemyBoard.printEnemyBoard
+  @enemyBoard.print_enemy_board
   # @enemyBoard.printBoard
   puts
   7.times { print "= " }
   2.times { puts }
-  @playerBoard.printBoard  
+  @playerBoard.print_board  
 end
 
 
-def runRound
-  printBoards
-  move = getMove
+def run_round
+  print_boards
+  move = get_move
 end
 
 # EXECUTION STARTS HERE
@@ -163,10 +163,10 @@ end
 
 puts "Welcome to Battleship"
 
-placeShips
+place_ships
 
 
-while (not checkForWin)
-  runRound
+while (not check_for_win)
+  run_round
 end
 

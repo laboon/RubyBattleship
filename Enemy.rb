@@ -13,12 +13,12 @@ class Enemy
     
   end
   
-  def giveResult(x, y, result)
+  def give_result(x, y, result)
     @lastX = x
     @lastY = y
   end
   
-  def getMove
+  def get_move
     if @currentState == HuntMode
       # TODO: implement "checkerboard" hunting
       # TODO: only fire shots at untested locations

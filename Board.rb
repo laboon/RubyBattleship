@@ -1,5 +1,6 @@
 
 class Board
+  
   def initialize
     # note that matrix size 9 = 10 element
     @matrixSize = 9
@@ -16,7 +17,7 @@ class Board
    
   attr_reader :matrixSize
     
-  def printBoard
+  def print_board
     3.times { print " " }
     for j in 0..@matrixSize do
       print j
@@ -35,7 +36,7 @@ class Board
     end
   end
   
-  def printEnemyBoard
+  def print_enemy_board
     3.times { print " " }
     for j in 0..@matrixSize do
       print j
@@ -61,7 +62,7 @@ class Board
     end
   end
   
-  def checkSunk(shipType)
+  def check_sunk(shipType)
     # puts "Checking if " + shipType + " is sunk.."
     for j in 0..@matrixSize
       for k in 0..@matrixSize
@@ -74,42 +75,37 @@ class Board
     return true  
   end
   
+  def get_ship_name(square)
+    case square
+      when ACSquare
+        return "an Aircraft Carrier!"
+      when BSquare
+        return "a Battleship!"
+      when SubSquare
+        return "a Submarine!"
+      when CruiserSquare
+        return "a Cruiser!"
+      when DestroyerSquare
+        return "a Destroyer!"
+      else
+        return "a Ship!"
+      end
+  end
+  
   def fire(x, y)
     square = @matrix[x][y]
     case square
-    when ACSquare
+    when ACSquare, BSquare, SubSquare, CruiserSquare, DestroyerSquare
       @matrix[x][y] = HitSquare
       puts "HIT!!!!"
-      if checkSunk(ACSquare)
-        puts "You sunk an Aircraft Carrier!"
+      if check_sunk(square)
+        puts "You sank " + get_ship_name(square)
       end
-    when BSquare
-      @matrix[x][y] = HitSquare
-      puts "HIT!!!!"
-      if checkSunk(BSquare)
-        puts "You sunk a Battleship!"
-      end
-    when SubSquare
-      @matrix[x][y] = HitSquare
-      puts "HIT!!!!"
-      if checkSunk(SubSquare)
-        puts "You sunk a Submarine!"
-      end
-    when CruiserSquare
-      @matrix[x][y] = HitSquare
-      puts "HIT!!!!"
-      if checkSunk(CruiserSquare)
-        puts "You sunk a Cruiser!"
-      end
-    when DestroyerSquare
-      @matrix[x][y] = HitSquare
-      puts "HIT!!!!"
-      if checkSunk(DestroyerSquare)
-        puts "You sunk a Destroyer!"
-      end
+    
     when EmptySquare
       puts "MISS!!!!"
       @matrix[x][y] = MissSquare
+      
     when HitSquare
       puts "HIT AGAIN!!!!"
     when MissSquare
@@ -118,7 +114,7 @@ class Board
     
   end
   
-  def checkValidEmpty(x, y)
+  def check_valid_empty(x, y)
     if x < 0 or x > @matrixSize
       return false
     end
@@ -131,7 +127,7 @@ class Board
     return true
   end
   
-  def clearRow(letter, row)
+  def clear_row(letter, row)
     for j in 0..@matrixSize
       if @matrix[row][j] == letter
         @matrix[row][j] = EmptySquare
@@ -139,7 +135,7 @@ class Board
     end
   end
   
-  def clearColumn(letter, col)
+  def clear_column(letter, col)
     for j in 0..@matrixSize
       if @matrix[j][col] == letter
         @matrix[j][col] = EmptySquare
@@ -147,26 +143,26 @@ class Board
     end
   end
   
-  def placeShip(ship)
+  def place_ship(ship)
     orientation, x, y = ship.orientation, ship.x, ship.y
     #puts "Putting ship of size " + String(ship.size) + " at " + String(x) + "," \
     #  + String(y) + ", " + orientation
     
     if orientation == "r" 
       for j in y..(y + ship.size - 1)
-        if checkValidEmpty(x, j)
+        if check_valid_empty(x, j)
           @matrix[x][j] = ship.rep
         else
-          clearRow(ship.rep, x)
+          clear_row(ship.rep, x)
           return false
         end
       end
     elsif orientation == "d"
       for j in x..(x + ship.size - 1)
-        if checkValidEmpty(j, y)
+        if check_valid_empty(j, y)
           @matrix[j][y] = ship.rep
         else
-          clearColumn(ship.rep, y)
+          clear_column(ship.rep, y)
           return false
         end
       end
